@@ -76,7 +76,7 @@ def find_unused_letters(letters,words):
 unused_letters=find_unused_letters (alphabet,all_words)   
 
 
-def add_word(existing_phrase,dictionary,letters_availible,interesting_length,secondary_words={}):
+def add_word(existing_phrase,dictionary,letters_available,interesting_length,secondary_words={}):
     progress=0
     words=list(dictionary.keys())
     for new_word in words:
@@ -84,16 +84,16 @@ def add_word(existing_phrase,dictionary,letters_availible,interesting_length,sec
         #if(existing_phrase==[]):
             #print('\r'+str(100*progress/valid_word_count)[:6]+'%',end='')
         new_phrase=existing_phrase+[new_word]
-        new_letters_availible={}
+        new_letters_available={}
         for letter in alphabet:
-            new_letters_availible[letter]=letters_availible[letter]-dictionary[new_word][letter]
+            new_letters_available[letter]=letters_available[letter]-dictionary[new_word][letter]
         new_remaining_words=dictionary
         new_remaining_words.update(secondary_words)#adds in the other words
         if supress_repeats:
             del(new_remaining_words[new_word])
-        new_remaining_words=remove_impossible_words(new_remaining_words,new_letters_availible)
+        new_remaining_words=remove_impossible_words(new_remaining_words,new_letters_available)
         if len(new_remaining_words)>0:
-            add_word(new_phrase,new_remaining_words,new_letters_availible,interesting_length)
+            add_word(new_phrase,new_remaining_words,new_letters_available,interesting_length)
         else:
             if phrase_length(new_phrase) >= interesting_length:
                 if not supress_repeats:
