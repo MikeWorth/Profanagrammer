@@ -12,8 +12,8 @@ with open('input_words.txt', encoding="utf8") as f:
 input_words=list(set(input_words))#removes duplicates
 input_words.sort(key=len)#do the short ones first, so that easy results aren't held up by an unreasonably long input word
 
-unusedletters_reported=0
-supress_repeats=False#can the same word be repeated with a profanagram? Enabling this speeds things up LOTS for long inputs
+unusedletters_reported=2
+supress_repeats=True#can the same word be repeated with a profanagram? Enabling this speeds things up LOTS for long inputs
 
 alphabet=string.ascii_lowercase
 
@@ -96,6 +96,12 @@ def add_word(existing_phrase,dictionary,letters_available,interesting_length,sec
             add_word(new_phrase,new_remaining_words,new_letters_available,interesting_length)
         else:
             if phrase_length(new_phrase) >= interesting_length:
+                if sum(new_letters_available.values()) > 0:
+                    left_over_letters=''
+                    for letter in new_letters_available:
+                        for i in range(new_letters_available[letter]):
+                            left_over_letters+=letter
+                    new_phrase+= [left_over_letters]
                 if not supress_repeats:
                     new_phrase.sort()
                 if new_phrase not in possible_phrases:
