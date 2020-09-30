@@ -152,6 +152,17 @@ if include_substitutions:
     print("Expanded "+str(len(input_words))+" words into "+str(len(input_words_with_subs))+" by including letter substitutions")
     input_words=input_words_with_subs
 
+    #Removes words that aren't explicitly duplicate, but do contain the same letters (much more common with letter substitutions
+    existing_letter_combinations=[]
+    input_words_cleaned=[]
+    for input_word in input_words:
+        letter_combo=''.join(sorted(input_word))
+        if letter_combo not in existing_letter_combinations:
+            existing_letter_combinations.append(letter_combo)
+            input_words_cleaned.append(input_word)
+    print("Reduced "+str(len(input_words))+" words into "+str(len(input_words_cleaned))+" by removing identical letter sets")
+    input_words=input_words_cleaned
+
 all_possible_phrases={}
 
 for input_word in input_words:
