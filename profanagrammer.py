@@ -1,5 +1,7 @@
 import string
 
+include_substitutions=True
+
 with open('profanities.txt') as f:
     all_words = f.read().splitlines()
 
@@ -15,7 +17,7 @@ input_words.sort(key=len)#do the short ones first, so that easy results aren't h
 unusedletters_reported=2
 supress_repeats=True#can the same word be repeated with a profanagram? Enabling this speeds things up LOTS for long inputs
 
-alphabet=string.ascii_lowercase
+alphabet=string.ascii_lowercase + string.digits
 
 def word_to_letters (word):
     letters={}
@@ -106,6 +108,49 @@ def add_word(existing_phrase,dictionary,letters_available,interesting_length,sec
                     new_phrase.sort()
                 if new_phrase not in possible_phrases:
                     possible_phrases.append(new_phrase)
+
+if include_substitutions:
+
+    substitutions={}
+
+    #seed blank entries for all letters
+    for letter in alphabet:
+        substitutions[letter]=[]
+
+    #TODO: put in separate file
+    substitutions['a']=['v']
+    substitutions['e']=['w','m']
+    substitutions['m']=['w','e']
+    substitutions['n']=['z']
+    substitutions['v']=['a']
+    substitutions['w']=['m','e']
+    substitutions['z']=['n']
+    substitutions['0']=['o']
+    substitutions['1']=['i']
+    substitutions['3']=['e']
+    substitutions['4']=['a']
+    substitutions['5']=['s']
+    substitutions['6']=['b']
+    substitutions['7']=['l']
+    substitutions['8']=['b']
+    substitutions['9']=['g']
+    input_words_with_subs=[]
+
+    for input_word in input_words:
+
+        partial_words=[input_word[0]] + substitutions[input_word[0]]
+
+        for letter in input_word[1:]:
+            previous_partial_words=partial_words.copy()
+            partial_words=[]
+            possible_letters=[letter]
+            possible_letters+= substitutions[letter]
+            for partial_word in previous_partial_words:
+                for possible_letter in possible_letters:
+                    partial_words.append(partial_word+possible_letter)
+        input_words_with_subs+=partial_words
+    print("Expanded "+str(len(input_words))+" words into "+str(len(input_words_with_subs))+" by including letter substitutions")
+    input_words=input_words_with_subs
 
 all_possible_phrases={}
 
